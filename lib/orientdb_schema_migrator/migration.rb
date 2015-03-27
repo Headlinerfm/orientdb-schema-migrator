@@ -1,9 +1,10 @@
 module OrientdbSchemaMigrator
+  class MigrationError < StandardError; end
+
   class Migration
     def self.create_class class_name, class_options={}
       # check if class exists first
       if class_exists? class_name
-        puts "class #{class_name} already exists"
         return false
       else
         ODBClient.create_class class_name, class_options
@@ -19,7 +20,6 @@ module OrientdbSchemaMigrator
     def self.drop_class class_name
       # check if class exists first
       if !class_exists? class_name
-        puts "class #{class_name} doesn't exist"
         return false
       else
         # delete vertices/edges first
@@ -40,31 +40,34 @@ module OrientdbSchemaMigrator
         ODBClient.command "alter class #{old_name} name #{new_name}"
         return true
       else
-        puts "#{class_name} doesn't exist"
         return false
       end
     end
 
-    def self.add_property class_name, property_name, type,property_options={}
+    def self.add_property class_name, property_name, type, property_options={}
+      return false unless class_exists?(class_name)
       ODBClient.create_property class_name,property_name,type, property_options
     end
 
     def self.drop_property class_name, property_name
+      return false unless class_exists?(class_name)
+      return false unless property_exists?(class_name, property_name)
       ODBClient.command "drop property #{class_name}.#{property_name}"
     end
 
     def self.alter_property class_name, property_name, attribute_name, new_value
+      return false unless class_exists?(class_name)
+      return false unless property_exists?(class_name, property_name)
       ODBClient.command "alter property #{class_name}.#{property_name} #{attribute_name} #{new_value}"
     end
 
-    def self.add_index class_name, index_name, property_name, type
+    def self.add_index class_name, property_name, index_name, type
       # schema has to exist.
       # check if property exists first, if not ask to create property.
       if property_exists? class_name, property_name
         ODBClient.command "create index #{index_name} on #{class_name} (#{property_name}) #{type}"
         return true
       else
-        puts "please create property #{property_name} first"
         return false
       end
     end
@@ -86,7 +89,6 @@ module OrientdbSchemaMigrator
           return false
         end
       else
-        puts "#{class_name} doesn't exist"
         return false
       end
     end

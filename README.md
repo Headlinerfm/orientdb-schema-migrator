@@ -20,6 +20,12 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+## Testing
+
+1. Install OrientDb and run it locally.
+2. Create a database named `schema_test` with an admin user named `test`, password `test` (or provide your own credentials via environment variables).
+You can test that this is correctly setup with `rake db:test_connection`.
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/orientdb-schema-migrator/fork )
