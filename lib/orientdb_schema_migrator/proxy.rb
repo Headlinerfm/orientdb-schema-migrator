@@ -7,13 +7,20 @@ module OrientdbSchemaMigrator
       @context = context
     end
 
-    def proxy(&block)
-      block.call
+    def add_property(property, type, options = {})
+      target.public_send(:add_property, context, property, type, options)
     end
 
-    def method_missing(type,property, options={})
-      puts self.context
-      self.target.send :add_property, self.context, property, type, options
+    def alter_property(property, attribute_name, new_value)
+      target.public_send(:add_property, context, property, attribute_name, new_value)
+    end
+
+    def drop_property(property)
+      target.public_send(:add_property, context, property)
+    end
+
+    def add_index(property, index_name, index_type)
+      target.public_send(:add_property, context, property, index_name, index_type)
     end
   end
 end
