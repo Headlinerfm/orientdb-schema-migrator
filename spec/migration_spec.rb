@@ -199,8 +199,7 @@ describe OrientdbSchemaMigrator::Migration do
 
         it 'adds the index' do
           expect(OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')).to be true
-          indexes = OrientdbSchemaMigrator::ODBClient.get_class(test_class_name)['indexes']
-          expect(indexes.detect { |idx| idx['name'] == index_name }).to be
+          expect(OrientdbSchemaMigrator::Migration.index_exists?(test_class_name, index_name)).to be true
         end
       end
 

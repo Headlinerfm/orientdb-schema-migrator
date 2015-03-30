@@ -80,6 +80,12 @@ module OrientdbSchemaMigrator
       ODBClient.class_exists? class_name
     end
 
+    def self.index_exists?(class_name, index_name)
+      indexes = ODBClient.get_class(class_name)["indexes"]
+      return false unless indexes
+      return indexes.any? { |idx| idx['name'] == index_name }
+    end
+
     def self.property_exists? class_name, property_name
       if class_exists? class_name
         properties = ODBClient.get_class(class_name)["properties"]
