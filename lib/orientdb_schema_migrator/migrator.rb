@@ -5,7 +5,7 @@ module OrientdbSchemaMigrator
         ODBClient.connect :database => db, :user => user, :password => password
       end
 
-      def migrate command, version, db_folder
+      def migrate command, db_folder, version
         load_migration_file db_folder, version
         case command
         when "up"
@@ -22,7 +22,7 @@ module OrientdbSchemaMigrator
         if file_path.size > 0
           migration_file_name = file_path[0]
         else
-          puts "can't find correct version"
+          raise "can't find correct version"
         end
 
         require migration_file_name
