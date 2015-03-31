@@ -7,7 +7,7 @@ task :console do
   Pry.start
 end
 
-namespace :db do
+db_namespace = namespace :db do
   require 'orientdb_schema_migrator'
   db = ENV['odb_schema_test_db'] || 'schema_test'
   db_user = ENV['odb_schema_test_user'] || 'test'
@@ -18,12 +18,32 @@ namespace :db do
     password: db_pass
   }
 
-  task :test_connection do
+  task :connect do
+    OrientdbSchemaMigrator::ODBClient.connect(:database => db, :user => db_user, :password => db_pass)
+  end
+
+  desc "Verify your orientdb test database setup"
+  task :verify_test_db do
     if OrientdbSchemaMigrator::ODBClient.database_exists?(config)
-      puts "Success! test database exists"
+      puts "Test database exists"
     else
       raise "Failure: database does not exist"
     end
+
+    db_namespace['connect'].invoke
+    if OrientdbSchemaMigrator::Migration.class_exists?('schema_versions')
+      puts "`schema_versions` exists"
+    else
+      raise "Failure: `schema_versions` table does not exist"
+    end
+
+    puts "Success"
+  end
+
+  desc "Add the `schema_versions` class to your database"
+  task :add_schema_class => [:connect] do
+    OrientdbSchemaMigrator::Migration.create_class('schema_versions')
+    OrientdbSchemaMigrator::Migration.add_property('schema_versions', 'schema_version', 'string')
   end
 end
 

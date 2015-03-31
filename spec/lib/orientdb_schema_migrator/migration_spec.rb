@@ -65,7 +65,7 @@ describe OrientdbSchemaMigrator::Migration do
       before do
         OrientdbSchemaMigrator::Migration.create_class(test_class_name)
       end
-      
+
       after do
         begin
           OrientdbSchemaMigrator::Migration.drop_class(renamed_class)
@@ -96,7 +96,7 @@ describe OrientdbSchemaMigrator::Migration do
         OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer')
         expect(OrientdbSchemaMigrator::Migration.property_exists?(test_class_name, prop_name)).to be true
       end
-      
+
       context 'with invalid property type' do
         it 'raises an exception' do
           expect { OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'symbol') }.to raise_exception(Orientdb4r::ServerError)
@@ -106,7 +106,7 @@ describe OrientdbSchemaMigrator::Migration do
 
     context 'when class does not exist' do
       it 'returns false' do
-        expect(OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer')).to be false
+        expect { OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer') }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
       end
     end
   end
@@ -139,7 +139,7 @@ describe OrientdbSchemaMigrator::Migration do
 
     context 'when class does not exist' do
       it 'returns false' do
-        expect(OrientdbSchemaMigrator::Migration.drop_property(test_class_name, prop_name)).to be false
+        expect { OrientdbSchemaMigrator::Migration.drop_property(test_class_name, prop_name) }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
       end
     end
   end
@@ -176,7 +176,7 @@ describe OrientdbSchemaMigrator::Migration do
 
     context 'when class does not exist' do
       it 'returns false' do
-        expect(OrientdbSchemaMigrator::Migration.alter_property(test_class_name, prop_name, 'name', 'old_age')).to be false
+        expect { OrientdbSchemaMigrator::Migration.alter_property(test_class_name, prop_name, 'name', 'old_age') }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
       end
     end
   end
@@ -193,26 +193,22 @@ describe OrientdbSchemaMigrator::Migration do
           OrientdbSchemaMigrator::Migration.add_property('user', 'age', 'integer')
         end
 
-        it 'succeeds' do
-          expect(OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')).to be true
-        end
-
         it 'adds the index' do
-          expect(OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')).to be true
+          OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')
           expect(OrientdbSchemaMigrator::Migration.index_exists?(test_class_name, index_name)).to be true
         end
       end
 
       context 'when property does not exist' do
         it 'fails' do
-          expect(OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')).to be false
+          expect { OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique') }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
         end
       end
     end
 
     context 'class does not exist' do
       it 'returns false' do
-        expect(OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')).to be false
+        expect { OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique') }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
       end
     end
   end

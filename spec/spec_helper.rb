@@ -98,3 +98,7 @@ RSpec.configure do |config|
   end
 =end
 end
+
+def migrations_path
+  File.expand_path('../support/migrations', __FILE__)
+end

@@ -45,31 +45,26 @@ module OrientdbSchemaMigrator
     end
 
     def self.add_property class_name, property_name, type, property_options={}
-      return false unless class_exists?(class_name)
+      assert_class_exists!(class_name)
       ODBClient.create_property class_name,property_name,type, property_options
     end
 
     def self.drop_property class_name, property_name
-      return false unless class_exists?(class_name)
+      assert_class_exists!(class_name)
       return false unless property_exists?(class_name, property_name)
       ODBClient.command "drop property #{class_name}.#{property_name}"
     end
 
     def self.alter_property class_name, property_name, attribute_name, new_value
-      return false unless class_exists?(class_name)
+      assert_class_exists!(class_name)
       return false unless property_exists?(class_name, property_name)
       ODBClient.command "alter property #{class_name}.#{property_name} #{attribute_name} #{new_value}"
     end
 
     def self.add_index class_name, property_name, index_name, type
-      # schema has to exist.
-      # check if property exists first, if not ask to create property.
-      if property_exists? class_name, property_name
-        ODBClient.command "create index #{index_name} on #{class_name} (#{property_name}) #{type}"
-        return true
-      else
-        return false
-      end
+      assert_class_exists!(class_name)
+      assert_property_exists!(class_name, property_name)
+      ODBClient.command "create index #{index_name} on #{class_name} (#{property_name}) #{type}"
     end
 
     def self.drop_index index_name
@@ -81,6 +76,7 @@ module OrientdbSchemaMigrator
     end
 
     def self.index_exists?(class_name, index_name)
+      return false unless class_exists?(class_name)
       indexes = ODBClient.get_class(class_name)["indexes"]
       return false unless indexes
       return indexes.any? { |idx| idx['name'] == index_name }
@@ -97,6 +93,14 @@ module OrientdbSchemaMigrator
       else
         return false
       end
+    end
+
+    def self.assert_class_exists!(class_name)
+      fail MigrationError.new("Class #{class_name} does not exist") unless class_exists?(class_name)
+    end
+
+    def self.assert_property_exists!(class_name, property)
+      fail MigrationError.new("#{class_name}.#{property} does not exist") unless property_exists?(class_name, property)
     end
   end
 end
