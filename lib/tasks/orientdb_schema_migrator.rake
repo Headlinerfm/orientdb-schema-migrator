@@ -39,8 +39,11 @@ namespace :odb do
 
     config = YAML.load_file(config_file)[env]
     OrientdbSchemaMigrator::Migrator.connect_to_db(config['db'], config['user'], config['password'])
-    yield
-    OrientdbSchemaMigrator::Migrator.disconnect
+    begin
+      yield
+    ensure
+      OrientdbSchemaMigrator::Migrator.disconnect
+    end
   end
 
   task :migrate => [:config] do
