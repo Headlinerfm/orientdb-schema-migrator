@@ -50,6 +50,8 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+
   # This setting enables warnings. It's recommended, but in some cases may
   # be too noisy due to issues in dependencies.
   # config.warnings = true

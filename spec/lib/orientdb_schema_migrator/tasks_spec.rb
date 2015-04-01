@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'support/shared_contexts/rake'
 
-describe 'odb:migrate' do
+describe 'odb:migrate', :integration do
   include_context 'rake'
   let(:task_path) { 'lib/tasks/orientdb_schema_migrator' }
   subject { rake['odb:migrate'] }
@@ -47,7 +47,7 @@ describe 'odb:migrate' do
   end
 end
 
-describe 'odb:rollback' do
+describe 'odb:rollback', :integration do
   include_context 'rake'
   let(:task_path) { 'lib/tasks/orientdb_schema_migrator' }
 
