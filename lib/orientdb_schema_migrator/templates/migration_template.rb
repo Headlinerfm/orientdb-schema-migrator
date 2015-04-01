@@ -1,4 +1,4 @@
-class <%= migration_class_name %> < OrientdbSchemaMigrator::Migration
+class <%= name %> < OrientdbSchemaMigrator::Migration
   def self.up
   end
 

@@ -102,3 +102,8 @@ end
 def migrations_path
   File.expand_path('../support/migrations', __FILE__)
 end
+
+def cleanup!(classes)
+  classes.each { |class_name| OrientdbSchemaMigrator::Migration.drop_class(class_name) }
+  OrientdbSchemaMigrator::ODBClient.command "truncate class schema_versions"
+end
