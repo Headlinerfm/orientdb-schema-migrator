@@ -2,6 +2,13 @@ require 'spec_helper'
 
 describe OrientdbSchemaMigrator::MigrationGenerator do
   let(:tmp_path) { File.expand_path('../../../../tmp/', __FILE__) }
+
+  around do |example|
+    ClimateControl.modify(ODB_TEST: 'true') do
+      example.run
+    end
+  end
+
   describe '.generate' do
     context 'with malformed name' do
       context 'not camelcase-able' do

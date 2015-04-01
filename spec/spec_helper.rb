@@ -20,6 +20,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'orientdb_schema_migrator'
+require 'climate_control'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -106,4 +107,8 @@ end
 def cleanup!(classes)
   classes.each { |class_name| OrientdbSchemaMigrator::Migration.drop_class(class_name) }
   OrientdbSchemaMigrator::ODBClient.command "truncate class schema_versions"
+end
+
+def with_modified_env(options, &block)
+  ClimateControl.modify(options, &block)
 end
