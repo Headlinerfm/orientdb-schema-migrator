@@ -6,6 +6,14 @@ describe OrientdbSchemaMigrator::Migration do
   rescue
   end
 
+  before(:all) do
+    connect_to_test_db
+  end
+
+  after(:all) do
+    disconnect_from_test_db
+  end
+
   after(:each) do
     cleanup!
   end

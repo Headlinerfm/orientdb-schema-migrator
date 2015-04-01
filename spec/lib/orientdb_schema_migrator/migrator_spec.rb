@@ -10,6 +10,14 @@ describe 'migration specs' do
     OrientdbSchemaMigrator::ODBClient.command "truncate class schema_versions"
   end
 
+  before(:all) do
+    connect_to_test_db
+  end
+
+  after(:all) do
+    disconnect_from_test_db
+  end
+
   describe 'simple class addition/removal' do
     before(:each) do
       OrientdbSchemaMigrator::Migrator.migrations_path = migrations_path

@@ -37,10 +37,6 @@ RSpec.configure do |config|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
-  config.before(:all) do
-    OrientdbSchemaMigrator::Migrator.connect_to_db('schema_test', 'test', 'test')
-  end
-
   # rspec-mocks config goes here. You can use an alternate test double
   # library (such as bogus or mocha) by changing the `mock_with` option here.
   config.mock_with :rspec do |mocks|
@@ -125,4 +121,12 @@ end
 
 def index_exists?(class_name, index_name)
   OrientdbSchemaMigrator::Migration.index_exists?(class_name, index_name)
+end
+
+def connect_to_test_db
+  OrientdbSchemaMigrator::Migrator.connect_to_db('schema_test', 'test', 'test')
+end
+
+def disconnect_from_test_db
+  OrientdbSchemaMigrator::Migrator.disconnect
 end
