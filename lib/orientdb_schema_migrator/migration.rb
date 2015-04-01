@@ -51,13 +51,13 @@ module OrientdbSchemaMigrator
 
     def self.drop_property class_name, property_name
       assert_class_exists!(class_name)
-      return false unless property_exists?(class_name, property_name)
+      assert_property_exists!(class_name, property_name)
       ODBClient.command "drop property #{class_name}.#{property_name}"
     end
 
     def self.alter_property class_name, property_name, attribute_name, new_value
       assert_class_exists!(class_name)
-      return false unless property_exists?(class_name, property_name)
+      assert_property_exists!(class_name, property_name)
       ODBClient.command "alter property #{class_name}.#{property_name} #{attribute_name} #{new_value}"
     end
 

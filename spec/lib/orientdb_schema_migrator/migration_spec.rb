@@ -140,7 +140,7 @@ describe OrientdbSchemaMigrator::Migration do
 
       context 'and property does not exist' do
         it 'returns false' do
-          expect(OrientdbSchemaMigrator::Migration.drop_property(test_class_name, prop_name)).to be false
+          expect { OrientdbSchemaMigrator::Migration.drop_property(test_class_name, prop_name) }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
         end
       end
     end
@@ -177,7 +177,7 @@ describe OrientdbSchemaMigrator::Migration do
 
       context 'and property does not exist' do
         it 'returns false' do
-          expect(OrientdbSchemaMigrator::Migration.alter_property(test_class_name, prop_name, 'name', 'old_age')).to be false
+          expect { OrientdbSchemaMigrator::Migration.alter_property(test_class_name, prop_name, 'name', 'old_age') }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
         end
       end
     end
