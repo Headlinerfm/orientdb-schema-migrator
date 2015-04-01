@@ -15,8 +15,8 @@ module OrientdbSchemaMigrator
         ODBClient.connect :database => db, :user => user, :password => password
       end
 
-      def migrate
-        run(:up, nil)
+      def migrate(target_version = nil)
+        run(:up, target_version)
       end
 
       def migrations

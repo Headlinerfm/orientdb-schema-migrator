@@ -15,7 +15,7 @@ namespace :odb do
   end
 
   task :migrate => [:config] do
-    OrientdbSchemaMigrator::Migrator.migrate
+    OrientdbSchemaMigrator::Migrator.migrate(ENV['schema_version'])
   end
 
   task :rollback => [:config] do
