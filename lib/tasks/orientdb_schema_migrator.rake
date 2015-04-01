@@ -28,7 +28,16 @@ namespace :odb do
         raise "No odb config path defined"
       end
 
-    config = YAML.load_file(config_file)['test']
+    env =
+      if defined?(Rails)
+        Rails.env
+      elsif ENV['ODB_TEST']
+        'test'
+      else
+        raise "No environment specified to load database connection config"
+      end
+
+    config = YAML.load_file(config_file)[env]
     OrientdbSchemaMigrator::Migrator.connect_to_db(config['db'], config['user'], config['password'])
     yield
     OrientdbSchemaMigrator::Migrator.disconnect
