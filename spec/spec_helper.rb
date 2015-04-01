@@ -130,3 +130,9 @@ end
 def disconnect_from_test_db
   OrientdbSchemaMigrator::Migrator.disconnect
 end
+
+def with_test_db_connection &block
+  OrientdbSchemaMigrator::Migrator.connect_to_db('schema_test', 'test', 'test')
+  yield
+  OrientdbSchemaMigrator::Migrator.disconnect
+end

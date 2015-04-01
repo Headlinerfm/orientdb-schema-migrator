@@ -18,19 +18,25 @@ describe 'odb:migrate', :integration do
     end
 
     before(:each) do
-      cleanup!(['users'])
+      with_test_db_connection do
+        cleanup!(['users'])
+      end
     end
 
     after(:each) do
-      cleanup!(['users'])
+      with_test_db_connection do
+        cleanup!(['users'])
+      end
     end
 
     it 'creates then removes the class, properties, index' do
       subject.invoke
-      expect(class_exists?('users')).to be true
-      expect(property_exists?('users', 'age')).to be true
-      expect(property_exists?('users', 'name')).to be true
-      expect(index_exists?('users', 'user_age_idx')).to be true
+      with_test_db_connection do
+        expect(class_exists?('users')).to be true
+        expect(property_exists?('users', 'age')).to be true
+        expect(property_exists?('users', 'name')).to be true
+        expect(index_exists?('users', 'user_age_idx')).to be true
+      end
     end
 
     context 'with specific version targeted' do
@@ -38,10 +44,12 @@ describe 'odb:migrate', :integration do
         ClimateControl.modify(schema_version: '201503290123456') do
           subject.invoke
         end
-        expect(class_exists?('users')).to be true
-        expect(property_exists?('users', 'age')).to be true
-        expect(property_exists?('users', 'name')).to be true
-        expect(index_exists?('users', 'user_age_idx')).to be false
+        with_test_db_connection do
+          expect(class_exists?('users')).to be true
+          expect(property_exists?('users', 'age')).to be true
+          expect(property_exists?('users', 'name')).to be true
+          expect(index_exists?('users', 'user_age_idx')).to be false
+        end
       end
     end
   end
@@ -63,18 +71,23 @@ describe 'odb:rollback', :integration do
     end
 
     before(:each) do
-      cleanup!(['users'])
+      with_test_db_connection do
+        cleanup!(['users'])
+      end
     end
 
     after(:each) do
-      cleanup!(['users'])
+      with_test_db_connection do
+        cleanup!(['users'])
+      end
     end
 
     it 'creates then removes the index' do
       rake['odb:migrate'].invoke
-      expect(index_exists?('users', 'user_age_idx')).to be true
       rake['odb:rollback'].invoke
-      expect(index_exists?('users', 'user_age_idx')).to be false
+      with_test_db_connection do
+        expect(index_exists?('users', 'user_age_idx')).to be false
+      end
     end
   end
 end
