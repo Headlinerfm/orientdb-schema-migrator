@@ -19,7 +19,7 @@ describe OrientdbSchemaMigrator::Migration do
   describe '.class_exists?' do
     context 'when class does not exist' do
       it 'returns false' do
-        expect(OrientdbSchemaMigrator::Migration.class_exists?(test_class_name)).to be false
+        expect(class_exists?(test_class_name)).to be false
       end
     end
 
@@ -29,7 +29,7 @@ describe OrientdbSchemaMigrator::Migration do
       end
 
       it 'returns true' do
-        expect(OrientdbSchemaMigrator::Migration.class_exists?(test_class_name)).to be true
+        expect(class_exists?(test_class_name)).to be true
       end
     end
   end
@@ -38,7 +38,7 @@ describe OrientdbSchemaMigrator::Migration do
     context 'when class does not exist' do
       it 'creates the class' do
         OrientdbSchemaMigrator::Migration.create_class(test_class_name)
-        expect(OrientdbSchemaMigrator::Migration.class_exists?(test_class_name)).to be true
+        expect(class_exists?(test_class_name)).to be true
       end
     end
 
@@ -79,8 +79,8 @@ describe OrientdbSchemaMigrator::Migration do
 
       it 'renames the class' do
         OrientdbSchemaMigrator::Migration.rename_class(test_class_name, renamed_class)
-        expect(OrientdbSchemaMigrator::Migration.class_exists?(test_class_name)).to be false
-        expect(OrientdbSchemaMigrator::Migration.class_exists?(renamed_class)).to be true
+        expect(class_exists?(test_class_name)).to be false
+        expect(class_exists?(renamed_class)).to be true
       end
     end
   end
@@ -94,7 +94,7 @@ describe OrientdbSchemaMigrator::Migration do
 
       it 'adds the new property' do
         OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer')
-        expect(OrientdbSchemaMigrator::Migration.property_exists?(test_class_name, prop_name)).to be true
+        expect(property_exists?(test_class_name, prop_name)).to be true
       end
 
       context 'with invalid property type' do
@@ -124,9 +124,9 @@ describe OrientdbSchemaMigrator::Migration do
         end
 
         it 'drops the property' do
-          expect(OrientdbSchemaMigrator::Migration.property_exists?(test_class_name, prop_name)).to be true
+          expect(property_exists?(test_class_name, prop_name)).to be true
           OrientdbSchemaMigrator::Migration.drop_property(test_class_name, prop_name)
-          expect(OrientdbSchemaMigrator::Migration.property_exists?(test_class_name, prop_name)).to be false
+          expect(property_exists?(test_class_name, prop_name)).to be false
         end
       end
 
@@ -162,8 +162,8 @@ describe OrientdbSchemaMigrator::Migration do
 
         it 'alters the property' do
           OrientdbSchemaMigrator::Migration.alter_property(test_class_name, prop_name, 'name', 'old_age')
-          expect(OrientdbSchemaMigrator::Migration.property_exists?(test_class_name, prop_name)).to be false
-          expect(OrientdbSchemaMigrator::Migration.property_exists?(test_class_name, 'old_age')).to be true
+          expect(property_exists?(test_class_name, prop_name)).to be false
+          expect(property_exists?(test_class_name, 'old_age')).to be true
         end
       end
 
@@ -195,7 +195,7 @@ describe OrientdbSchemaMigrator::Migration do
 
         it 'adds the index' do
           OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')
-          expect(OrientdbSchemaMigrator::Migration.index_exists?(test_class_name, index_name)).to be true
+          expect(index_exists?(test_class_name, index_name)).to be true
         end
       end
 

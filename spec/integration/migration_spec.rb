@@ -20,17 +20,17 @@ describe 'integration specs' do
 
     it 'creates then removes the class, properties, index' do
       OrientdbSchemaMigrator::Migrator.migrate
-      expect(OrientdbSchemaMigrator::Migration.class_exists?('users')).to be true
-      expect(OrientdbSchemaMigrator::Migration.property_exists?('users', 'age')).to be true
-      expect(OrientdbSchemaMigrator::Migration.property_exists?('users', 'name')).to be true
-      expect(OrientdbSchemaMigrator::Migration.index_exists?('users', 'user_age_idx')).to be true
+      expect(class_exists?('users')).to be true
+      expect(property_exists?('users', 'age')).to be true
+      expect(property_exists?('users', 'name')).to be true
+      expect(index_exists?('users', 'user_age_idx')).to be true
       expect(schema_versions.size).to eql(2)
       OrientdbSchemaMigrator::Migrator.rollback
-      expect(OrientdbSchemaMigrator::Migration.index_exists?('users', 'user_age_idx')).to be false
-      expect(OrientdbSchemaMigrator::Migration.class_exists?('users')).to be true
+      expect(index_exists?('users', 'user_age_idx')).to be false
+      expect(class_exists?('users')).to be true
       expect(schema_versions.size).to eql(1)
       OrientdbSchemaMigrator::Migrator.rollback
-      expect(OrientdbSchemaMigrator::Migration.class_exists?('users')).to be false
+      expect(class_exists?('users')).to be false
       expect(schema_versions.size).to eql(0)
     end
   end

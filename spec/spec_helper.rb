@@ -112,3 +112,15 @@ end
 def with_modified_env(options, &block)
   ClimateControl.modify(options, &block)
 end
+
+def class_exists?(class_name)
+  OrientdbSchemaMigrator::Migration.class_exists?(class_name)
+end
+
+def property_exists?(class_name, property_name)
+  OrientdbSchemaMigrator::Migration.property_exists?(class_name, property_name)
+end
+
+def index_exists?(class_name, index_name)
+  OrientdbSchemaMigrator::Migration.index_exists?(class_name, index_name)
+end

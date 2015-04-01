@@ -21,9 +21,9 @@ describe 'migration specs' do
 
     it 'creates then removes the class' do
       OrientdbSchemaMigrator::Migrator.new(nil, '201503290123456', :up).migrate
-      expect(OrientdbSchemaMigrator::Migration.class_exists?('users')).to be true
+      expect(class_exists?('users')).to be true
       OrientdbSchemaMigrator::Migrator.rollback
-      expect(OrientdbSchemaMigrator::Migration.class_exists?('users')).to be false
+      expect(class_exists?('users')).to be false
     end
   end
 
@@ -38,11 +38,11 @@ describe 'migration specs' do
 
     it 'creates then removes the class' do
       OrientdbSchemaMigrator::Migrator.new('201503290123457', '201503290123457', :up).migrate
-      expect(OrientdbSchemaMigrator::Migration.class_exists?('users')).to be true
-      expect(OrientdbSchemaMigrator::Migration.property_exists?('users', 'age')).to be true
-      expect(OrientdbSchemaMigrator::Migration.property_exists?('users', 'name')).to be true
+      expect(class_exists?('users')).to be true
+      expect(property_exists?('users', 'age')).to be true
+      expect(property_exists?('users', 'name')).to be true
       OrientdbSchemaMigrator::Migrator.rollback
-      expect(OrientdbSchemaMigrator::Migration.class_exists?('users')).to be false
+      expect(class_exists?('users')).to be false
     end
   end
 
@@ -58,10 +58,10 @@ describe 'migration specs' do
 
     it 'creates class and index' do
       OrientdbSchemaMigrator::Migrator.new('201503290123457', '201503290123458', :up).migrate
-      expect(OrientdbSchemaMigrator::Migration.property_exists?('users', 'age')).to be true
-      expect(OrientdbSchemaMigrator::Migration.index_exists?('users', 'user_age_idx')).to be true
+      expect(property_exists?('users', 'age')).to be true
+      expect(index_exists?('users', 'user_age_idx')).to be true
       OrientdbSchemaMigrator::Migrator.run(:down, '201503290123457')
-      expect(OrientdbSchemaMigrator::Migration.index_exists?('users', 'user_age_idx')).to be false
+      expect(index_exists?('users', 'user_age_idx')).to be false
     end
   end
 end
