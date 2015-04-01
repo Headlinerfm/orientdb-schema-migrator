@@ -11,6 +11,10 @@ module OrientdbSchemaMigrator
         @migrations_path = path
       end
 
+      def migrations_path
+        @migrations_path
+      end
+
       def connect_to_db db, user, password
         ODBClient.connect :database => db, :user => user, :password => password
       end

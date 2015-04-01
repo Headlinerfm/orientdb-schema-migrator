@@ -5,7 +5,7 @@ namespace :odb do
         if ENV['odb_migrations_path']
           migrations_path = ENV['odb_migrations_path']
         elsif defined?(Rails)
-          Rails.root + 'db/odb_migrate'
+          Rails.root.to_s + '/db/orientdb/migrate'
         else
           raise "No migrations path defined"
         end
@@ -22,7 +22,7 @@ namespace :odb do
     OrientdbSchemaMigrator::Migrator.rollback
   end
 
-  task :generate_migration do
+  task :generate_migration => [:config] do
     OrientdbSchemaMigrator::MigrationGenerator.generate(ENV['migration_name'], OrientdbSchemaMigrator::Migrator.migrations_path)
   end
 end

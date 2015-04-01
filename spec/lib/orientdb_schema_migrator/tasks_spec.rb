@@ -58,7 +58,7 @@ describe 'odb:rollback', :integration do
   end
 
   context 'with passing migrations' do
-    before(:all) do
+    before(:each) do
       OrientdbSchemaMigrator::Migrator.migrations_path = migrations_path + '/passing_series'
     end
 
@@ -75,6 +75,30 @@ describe 'odb:rollback', :integration do
       expect(index_exists?('users', 'user_age_idx')).to be true
       rake['odb:rollback'].invoke
       expect(index_exists?('users', 'user_age_idx')).to be false
+    end
+  end
+end
+
+describe 'odb:generate_migration' do
+  include_context 'rake'
+  let(:task_path) { 'lib/tasks/orientdb_schema_migrator' }
+
+  around do |example|
+    ClimateControl.modify(ODB_TEST: 'true') do
+      example.run
+    end
+  end
+
+  before(:each) do
+    OrientdbSchemaMigrator::Migrator.migrations_path = migrations_path
+  end
+
+  context 'with valid name' do
+    it 'writes the migration template to a file' do
+      ClimateControl.modify(migration_name: 'FooBar') do
+        expect(File).to receive(:open).with(match(/[0-9]{14}_foo_bar/), 'w', 0644)
+        rake['odb:generate_migration'].invoke
+      end
     end
   end
 end
