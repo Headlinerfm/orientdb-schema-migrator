@@ -55,8 +55,8 @@ describe OrientdbSchemaMigrator::Migration do
         OrientdbSchemaMigrator::Migration.create_class(test_class_name)
       end
 
-      it 'returns false' do
-        expect(OrientdbSchemaMigrator::Migration.create_class(test_class_name)).to be false
+      it 'fails' do
+        expect { OrientdbSchemaMigrator::Migration.create_class(test_class_name) }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
       end
     end
   end
@@ -64,8 +64,8 @@ describe OrientdbSchemaMigrator::Migration do
   describe '.rename_class' do
     let(:renamed_class) { 'foo' }
     context 'when class does not exist' do
-      it 'returns false' do
-        expect(OrientdbSchemaMigrator::Migration.rename_class(test_class_name, renamed_class)).to be false
+      it 'fails' do
+        expect { OrientdbSchemaMigrator::Migration.rename_class(test_class_name, renamed_class) }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
       end
     end
 
@@ -81,13 +81,8 @@ describe OrientdbSchemaMigrator::Migration do
         end
       end
 
-      it 'returns true' do
-        expect(OrientdbSchemaMigrator::Migration.rename_class(test_class_name, renamed_class)).to be true
-      end
-
       it 'renames the class' do
         OrientdbSchemaMigrator::Migration.rename_class(test_class_name, renamed_class)
-        expect(class_exists?(test_class_name)).to be false
         expect(class_exists?(renamed_class)).to be true
       end
     end
@@ -99,17 +94,27 @@ describe OrientdbSchemaMigrator::Migration do
       before do
         OrientdbSchemaMigrator::Migration.create_class(test_class_name)
       end
+      context 'when property does not exist' do
+        it 'adds the new property' do
+          OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer')
+          expect(property_exists?(test_class_name, prop_name)).to be true
+        end
 
-      it 'adds the new property' do
-        OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer')
-        expect(property_exists?(test_class_name, prop_name)).to be true
-      end
-
-      context 'with invalid property type' do
-        it 'raises an exception' do
-          expect { OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'symbol') }.to raise_exception(Orientdb4r::ServerError)
+        context 'with invalid property type' do
+          it 'raises an exception' do
+            expect { OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'symbol') }.to raise_exception(Orientdb4r::ServerError)
+          end
         end
       end
+      context 'when property already exists' do
+        before do
+          OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer')
+        end
+        it 'fails' do
+          expect { OrientdbSchemaMigrator::Migration.add_property(test_class_name, prop_name, 'integer') }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
+        end
+      end
+
     end
 
     context 'when class does not exist' do
@@ -201,9 +206,20 @@ describe OrientdbSchemaMigrator::Migration do
           OrientdbSchemaMigrator::Migration.add_property('user', 'age', 'integer')
         end
 
-        it 'adds the index' do
-          OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')
-          expect(index_exists?(test_class_name, index_name)).to be true
+        context 'when index already exists' do
+          before do
+            OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')
+          end
+          it 'fails' do
+            expect { OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique') }.to raise_exception(OrientdbSchemaMigrator::MigrationError)
+          end
+        end
+
+        context 'when index does not exist' do
+          it 'adds the index' do
+            OrientdbSchemaMigrator::Migration.add_index(test_class_name, 'age', index_name, 'unique')
+            expect(index_exists?(test_class_name, index_name)).to be true
+          end
         end
       end
 
