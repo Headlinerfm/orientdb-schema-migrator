@@ -2,6 +2,14 @@ require 'spec_helper'
 
 describe OrientdbSchemaMigrator::MigrationGenerator do
   let(:tmp_path) { File.expand_path('../../../../tmp/', __FILE__) }
+  def cleanup!
+    Dir[File.expand_path('../../../../tmp/', __FILE__)+'/*.rb'].each{|f| File.delete(f)}
+  rescue
+  end
+
+  after(:all) do
+    cleanup!
+  end
 
   around do |example|
     ClimateControl.modify(ODB_TEST: 'true') do
