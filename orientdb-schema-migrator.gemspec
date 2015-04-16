@@ -5,7 +5,7 @@ require 'orientdb_schema_migrator/version'
 require 'rake'
 
 Gem::Specification.new do |spec|
-  spec.name          = "orientdb_schema_migrator"
+  spec.name          = "orientdb-schema-migrator"
   spec.version       = OrientdbSchemaMigrator::VERSION
   spec.authors       = ["CoPromote"]
   spec.email         = ["info@copromote.com"]
