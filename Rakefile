@@ -2,13 +2,13 @@ require "bundler/gem_tasks"
 
 task :console do
   require 'pry'
-  require 'orientdb_schema_migrator'
+  require 'orientdb-schema-migrator'
   ARGV.clear
   Pry.start
 end
 
 db_namespace = namespace :db do
-  require 'orientdb_schema_migrator'
+  require 'orientdb-schema-migrator'
   db = ENV['odb_schema_test_db'] || 'schema_test'
   db_user = ENV['odb_schema_test_user'] || 'test'
   db_pass = ENV['odb_schema_test_pass'] || 'test'

@@ -1,4 +1,4 @@
-require 'orientdb_schema_migrator'
+require 'orientdb-schema-migrator'
 require 'rails'
 
 module OrientdbSchemaMigrator
