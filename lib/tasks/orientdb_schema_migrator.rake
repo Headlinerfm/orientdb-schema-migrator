@@ -46,18 +46,21 @@ namespace :odb do
     end
   end
 
+  desc "Migrate"
   task :migrate => [:config] do
     with_connection do
       OrientdbSchemaMigrator::Migrator.migrate(ENV['schema_version'])
     end
   end
 
+  desc "Rollback one migration"
   task :rollback => [:config] do
     with_connection do
       OrientdbSchemaMigrator::Migrator.rollback(ENV['schema_version'])
     end
   end
 
+  desc "Generate a new migration"
   task :generate_migration => [:config] do
     OrientdbSchemaMigrator::MigrationGenerator.generate(ENV['migration_name'], OrientdbSchemaMigrator::Migrator.migrations_path)
   end
