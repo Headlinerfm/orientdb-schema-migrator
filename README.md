@@ -2,11 +2,13 @@
 
 Migrate Orientdb schema.
 
+Uses a `schema_versions` class to keep track of migrations.
+
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'orientdb_schema_migrator'
+    gem 'orientdb-schema-migrator'
 
 And then execute:
 
@@ -14,11 +16,23 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install orientdb_schema_migrator
+    $ gem install orientdb-schema-migrator
 
 ## Usage
 
-TODO: Write usage instructions here
+### Create Migration
+
+`rake odb:generate_migration migration_name=CreateFoos`
+
+### Migrate
+
+`rake odb:migrate`
+
+### Rollback
+
+Rollback (one migration at a time).
+
+`rake odb:rollback`
 
 ## Testing
 
