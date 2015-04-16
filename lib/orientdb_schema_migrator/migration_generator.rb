@@ -18,8 +18,14 @@ module OrientdbSchemaMigrator
     end
 
     def self.generate(name, path)
+      create_folder_if_not_exists!(path)
       mg = new(name, path)
       mg.write_file
+    end
+
+    def self.create_folder_if_not_exists!(path)
+      return if File.directory?(path)
+      Dir.mkdir(path)
     end
 
     def initialize(name, path)
