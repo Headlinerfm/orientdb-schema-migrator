@@ -32,6 +32,10 @@ module OrientdbSchemaMigrator
   end
 
   def self.client
-    Orientdb4r.client(:host => get_config["host"])
+    if defined?($client)
+      $client
+    else
+      $client = Orientdb4r.client(:host => get_config["host"])
+    end
   end
 end
