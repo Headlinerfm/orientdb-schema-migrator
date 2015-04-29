@@ -19,12 +19,12 @@ db_namespace = namespace :db do
   }
 
   task :connect do
-    OrientdbSchemaMigrator::ODBClient.connect(:database => db, :user => db_user, :password => db_pass)
+    OrientdbSchemaMigrator.client.connect(:database => db, :user => db_user, :password => db_pass)
   end
 
   desc "Verify your orientdb test database setup"
   task :verify_test_db do
-    if OrientdbSchemaMigrator::ODBClient.database_exists?(config)
+    if OrientdbSchemaMigrator.client.database_exists?(config)
       puts "Test database exists"
     else
       raise "Failure: database does not exist"

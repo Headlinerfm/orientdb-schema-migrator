@@ -104,7 +104,7 @@ end
 
 def cleanup!(classes)
   classes.each { |class_name| OrientdbSchemaMigrator::Migration.drop_class(class_name) }
-  OrientdbSchemaMigrator::ODBClient.command "truncate class schema_versions"
+  OrientdbSchemaMigrator.client.command "truncate class schema_versions"
 end
 
 def with_modified_env(options, &block)

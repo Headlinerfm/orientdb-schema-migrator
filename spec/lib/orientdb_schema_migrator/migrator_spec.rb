@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe 'migration specs' do
   def schema_versions
-    OrientdbSchemaMigrator::ODBClient.command("SELECT * from schema_versions")['result']
+    OrientdbSchemaMigrator.client.command("SELECT * from schema_versions")['result']
   end
 
   def cleanup!(classes)
     classes.each { |class_name| OrientdbSchemaMigrator::Migration.drop_class(class_name) }
-    OrientdbSchemaMigrator::ODBClient.command "truncate class schema_versions"
+    OrientdbSchemaMigrator.client.command "truncate class schema_versions"
   end
 
   before(:all) do

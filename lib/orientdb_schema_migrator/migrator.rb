@@ -16,11 +16,11 @@ module OrientdbSchemaMigrator
       end
 
       def connect_to_db db, user, password
-        ODBClient.connect :database => db, :user => user, :password => password
+        OrientdbSchemaMigrator.client.connect :database => db, :user => user, :password => password
       end
 
       def disconnect
-        ODBClient.disconnect
+        OrientdbSchemaMigrator.client.disconnect
       end
 
       def migrate(target_version = nil)
@@ -55,7 +55,7 @@ module OrientdbSchemaMigrator
       end
 
       def current_version
-        response = ODBClient.command "SELECT schema_version FROM schema_versions ORDER BY @rid DESC LIMIT 1"
+        response = OrientdbSchemaMigrator.client.command "SELECT schema_version FROM schema_versions ORDER BY @rid DESC LIMIT 1"
         results = response['result']
         results.any? ? results.first['schema_version'] : nil
       end
@@ -107,11 +107,11 @@ module OrientdbSchemaMigrator
     end
 
     def record_migration(migration)
-      ODBClient.command "INSERT INTO schema_versions (schema_version) VALUES (#{migration[:version]})"
+      OrientdbSchemaMigrator.client.command "INSERT INTO schema_versions (schema_version) VALUES (#{migration[:version]})"
     end
 
     def drop_migration(migration)
-      ODBClient.command "DELETE FROM schema_versions WHERE schema_version = '#{migration[:version]}'"
+      OrientdbSchemaMigrator.client.command "DELETE FROM schema_versions WHERE schema_version = '#{migration[:version]}'"
     end
 
     def up?

@@ -15,7 +15,7 @@ namespace :odb do
   end
 
   def with_connection &block
-    config = Configuration::CONFIG
+    config = OrientdbSchemaMigrator.get_config
     OrientdbSchemaMigrator::Migrator.connect_to_db(config['db'], config['user'], config['password'])
     begin
       yield

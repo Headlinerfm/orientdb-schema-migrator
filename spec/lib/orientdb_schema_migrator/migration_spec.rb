@@ -247,9 +247,9 @@ describe OrientdbSchemaMigrator::Migration do
       end
 
       it 'drops the index' do
-        expect(OrientdbSchemaMigrator::ODBClient.get_class(test_class_name)['indexes']).not_to be_nil
+        expect(OrientdbSchemaMigrator.client.get_class(test_class_name)['indexes']).not_to be_nil
         OrientdbSchemaMigrator::Migration.drop_index(index_name)
-        expect(OrientdbSchemaMigrator::ODBClient.get_class(test_class_name)['indexes']).to be_nil
+        expect(OrientdbSchemaMigrator.client.get_class(test_class_name)['indexes']).to be_nil
       end
     end
 
