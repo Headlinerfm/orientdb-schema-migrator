@@ -21,6 +21,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'orientdb-schema-migrator'
 require 'climate_control'
+require 'pry'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -96,6 +97,11 @@ RSpec.configure do |config|
     config.default_formatter = 'doc'
   end
 =end
+  config.around do |example|
+    ClimateControl.modify(ODB_TEST: 'true') do
+      example.run
+    end
+  end
 end
 
 def migrations_path
@@ -124,7 +130,9 @@ def index_exists?(class_name, index_name)
 end
 
 def connect_to_test_db
-  OrientdbSchemaMigrator::Migrator.connect_to_db('schema_test', 'test', 'test')
+  ClimateControl.modify(ODB_TEST: 'true') do
+    OrientdbSchemaMigrator::Migrator.connect_to_db('schema_test', 'test', 'test')
+  end
 end
 
 def disconnect_from_test_db

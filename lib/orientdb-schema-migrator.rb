@@ -31,11 +31,8 @@ module OrientdbSchemaMigrator
     YAML.load_file(config_file)[env]
   end
 
+  @client = nil
   def self.client
-    if defined?($client)
-      $client
-    else
-      $client = Orientdb4r.client(:host => get_config["host"])
-    end
+    @client ||= Orientdb4r.client(:host => get_config["host"])
   end
 end

@@ -6,12 +6,6 @@ describe 'odb:migrate', :integration do
   let(:task_path) { 'lib/tasks/orientdb_schema_migrator' }
   subject { rake['odb:migrate'] }
 
-  around do |example|
-    ClimateControl.modify(ODB_TEST: 'true') do
-      example.run
-    end
-  end
-
   context 'with passing migrations' do
     before(:all) do
       OrientdbSchemaMigrator::Migrator.migrations_path = migrations_path + '/passing_series'

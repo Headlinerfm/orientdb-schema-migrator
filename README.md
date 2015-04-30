@@ -39,7 +39,8 @@ Rollback (one migration at a time).
 1. Install OrientDb and run it locally.
 2. Create a database named `schema_test` with an admin user named `test`, password `test` (or provide your own credentials via environment variables).
 You can test that this is correctly setup with `rake db:test_connection`.
-3. `rake spec`
+3. `ODB_TEST=true bundle exec rake db:add_schema_class`
+4. `bundle exec rake spec`
 
 ## Contributing
 
